@@ -27,7 +27,7 @@ require_once 'db_connect.php';
     </ul>
 </nav>
 
-<div class="container">
+<div class="container mt-5">
     <?php
     if(isset($_SESSION['username'])) {
         print("<p>Witamy ".$_SESSION['username']."</p>");
@@ -41,20 +41,22 @@ require_once 'db_connect.php';
             $row = mysqli_fetch_assoc($result);
             $id_uzytkownika = $row['id'];
 
-            $query2 = "SELECT id_przedmiotu, nazwa, cena, ilosc FROM przedmioty WHERE 1";
+            $query2 = "SELECT * FROM przedmioty WHERE 1";
             $result2 = mysqli_query($conn, $query2);
 
             if ($result2 && mysqli_num_rows($result2) > 0) {
-                echo "<table>
+                echo "<table class='table table-striped'>
                         <tr>
-                            <th>Nazwa</th>
-                            <th>Cena</th>
-                            <th>Ilość</th>
-                            <th>Akcja</th>
+                            <th scope='col'>Nazwa</th>
+                            <td border=0></td>
+                            <th scope='col'>Cena</th>
+                            <th scope='col'>Ilość</th>
+                            <th scope='col'>Akcja</th>
                         </tr>";
                 while ($row2 = mysqli_fetch_assoc($result2)) {
                     echo "<tr>
-                            <td>".$row2['nazwa']."</td>
+                            <th scope='row'>".$row2['nazwa']."</th>
+                            <td border=0><img src='".$row2['sciezka']."' alt='rysunek' class='img-fluid w-25'></td>
                             <td>".$row2['cena']."</td>
                             <td>".$row2['ilosc']."</td>
                             <td>
@@ -69,7 +71,8 @@ require_once 'db_connect.php';
             } else {
                 echo "<p>Użytkownik o nazwie $username nie posiada przedmiotów</p>";
             }
-        } else {
+        } else 
+        {
             echo "<p>Błąd podczas pobierania danych użytkownika.</p>";
         }
     } else {
@@ -91,15 +94,16 @@ require_once 'db_connect.php';
         $suma = $suma + $rowilosc['ilosc'];
     }
     ?>
-    <form action='PokazKoszyk.php' method='post'>
-        <div class="cart-icon" onclick="this.parentNode.submit();"><?php echo $suma; ?></div>
-    </form>
 </div>
-<?php
-if(isset($_SESSION['username'])) {
-    echo "<form action='logout.php' method='post'><input type='submit' class='btn btn-primary' value='Wyloguj'></form>";
-}
-?>
-
+<div class="container mt-5" style='display: flex'>
+    <div class="div1" style='flex: 1;'>
+        <form action='PokazKoszyk.php' method='post'>
+        <div class="cart-icon" onclick="this.parentNode.submit();"><?php echo $suma; ?></div>
+        </form>
+    </div>
+    <div class="div2" style='flex: 1;'>
+        <form action='logout.php' method='post'><input type='submit' class='btn btn-primary' value='Wyloguj'></form>
+    </div>
+</div>
 </body>
 </html>

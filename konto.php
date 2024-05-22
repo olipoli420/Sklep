@@ -25,7 +25,7 @@ $wiek=$row['wiek'];
     <nav>
     <ul>
         <li><a href="#">Strona główna</a></li>
-        <li><a href="#">Produkty</a></li>
+        <li><a href="welcome.php">Produkty</a></li>
         <li><a href="PokazKoszyk.php">Koszyk</a></li>
         <li><a href="konto.php">Konto</a></li>
         <li><a href="#">Kontakt</a></li>
@@ -33,7 +33,6 @@ $wiek=$row['wiek'];
 </nav>
 </head>
 <body>
-
 <div class="container">
     <div class="row">
         <div class="col">
@@ -52,10 +51,6 @@ $wiek=$row['wiek'];
                 ?>
             </div>
         </div>
-    </div>
-</div>
-<div class="container">
-    <div class="row">
         <div class="col">
             <!-- Przycisk, który wywołuje rozwijaną listę -->
             <button class="btn btn-primary" id="toggleDropdown1">Pokaż Zamowienia</button>
@@ -85,7 +80,9 @@ $wiek=$row['wiek'];
             </div>
         </div>
     </div>
+    <form action='logout.php' method='post'><input type='submit' class='btn btn-primary' value='Wyloguj'></form>
 </div>
+
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
