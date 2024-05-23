@@ -38,13 +38,29 @@ require_once 'db_connect.php';
         $query = "SELECT id FROM uzytkownicy WHERE login='$username'";
         $result = mysqli_query($conn, $query);
 
+        $selected_option = isset($_POST['opcje']) ? $_POST['opcje'] : '';
+        ?>
+        <form action="welcome.php" method="POST">
+            <label for="opcje">Sortuj:</label>
+            <select id="opcje" name="opcje" onchange="this.form.submit()">
+                <option value="Alfa" <?php if($selected_option == 'Alfa') echo 'selected'; ?>>Alfabetycznie</option>
+                <option value="CenaR" <?php if($selected_option == 'CenaR') echo 'selected'; ?>>Cena Rosnąco</option>
+                <option value="CenaM" <?php if($selected_option == 'CenaM') echo 'selected'; ?>>Cena malejąco</option>
+            </select>
+        </form>
+        <?php
         if ($result && mysqli_num_rows($result) > 0) {
             $row = mysqli_fetch_assoc($result);
             $id_uzytkownika = $row['id'];
 
             $query2 = "SELECT * FROM przedmioty WHERE 1";
             $result2 = mysqli_query($conn, $query2);
-
+            $queryAlfa="SELECT * FROM przedmioty ORDER BY nazwa";
+            $resultAlfa=mysqli_query($conn,$queryAlfa);
+            $queryCenaM="SELECT * FROM przedmioty ORDER BY cena DESC";
+            $resultCenaM=mysqli_query($conn,$queryCenaM);
+            $queryCenaR="SELECT * FROM przedmioty ORDER BY cena ";
+            $resultCenaR=mysqli_query($conn,$queryCenaR);
             if ($result2 && mysqli_num_rows($result2) > 0) {
                 echo "<table class='table table-striped'>
                         <tr>
@@ -54,21 +70,43 @@ require_once 'db_connect.php';
                             <th scope='col'>Ilość</th>
                             <th scope='col'>Akcja</th>
                         </tr>";
-                while ($row2 = mysqli_fetch_assoc($result2)) {
-                    echo "<tr>
-                            <th scope='row'>".$row2['nazwa']."</th>
-                            <td border=0><img src='".$row2['sciezka']."' alt='rysunek' class='img-fluid w-25'></td>
-                            <td>".$row2['cena']."</td>
-                            <td>".$row2['ilosc']."</td>
-                            <td>
-                                <form action='koszyk.php' method='post'>
-                                    <input type='submit' value='Zamów' class='btn btn-secondary'>
-                                    <input type='hidden' name='id_przedmiotu' value='".$row2['id_przedmiotu']."'>
-                                </form>
-                            </td>
-                          </tr>";
-                }
-                echo "</table>";
+
+
+
+                        if(isset($_POST['opcje'])) {
+                            switch ($_POST['opcje']) {
+                                case "Alfa":
+                                    $result = $resultAlfa;
+                                    break;
+                                case "CenaR":
+                                    $result = $resultCenaR;
+                                    break;
+                                case "CenaM":
+                                    $result = $resultCenaM;
+                                    break;
+                                default:
+                                    $result = $result2;
+                            }
+                        } else {
+                            $result = $result2;
+                        }
+        
+                        while ($row2 = mysqli_fetch_assoc($result)) {
+                            echo "<tr>
+                                    <th scope='row'>".$row2['nazwa']."</th>
+                                    <td border=0><img src='".$row2['sciezka']."' alt='rysunek' class='img-fluid w-25'></td>
+                                    <td>".$row2['cena']."</td>
+                                    <td>".$row2['ilosc']."</td>
+                                    <td>
+                                        <form action='koszyk.php' method='post'>
+                                            <input type='submit' value='Zamów' class='btn btn-secondary'>
+                                            <input type='hidden' name='id_przedmiotu' value='".$row2['id_przedmiotu']."'>
+                                        </form>
+                                    </td>
+                                  </tr>";
+                        }
+        
+                        echo "</table>";
             } else {
                 echo "<p>Użytkownik o nazwie $username nie posiada przedmiotów</p>";
             }

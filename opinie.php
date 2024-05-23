@@ -70,7 +70,7 @@ require_once 'db_connect.php';
 <nav>
     <ul>
         <li><a href="#">Strona główna</a></li>
-        <li><a href="#">Produkty</a></li>
+        <li><a href="welcome.php">Produkty</a></li>
         <li><a href="PokazKoszyk.php">Koszyk</a></li>
         <li><a href="konto.php">Konto</a></li>
         <li><a href="opinie.php">Opinie</a></li>
