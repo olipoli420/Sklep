@@ -28,6 +28,7 @@ $wiek=$row['wiek'];
         <li><a href="welcome.php">Produkty</a></li>
         <li><a href="PokazKoszyk.php">Koszyk</a></li>
         <li><a href="konto.php">Konto</a></li>
+        <li><a href="opinie.php">Opinie</a></li>
         <li><a href="#">Kontakt</a></li>
     </ul>
 </nav>
