@@ -35,8 +35,11 @@ require_once 'db_connect.php';
 
         $username = $_SESSION['username'];
 
-        $query = "SELECT id FROM uzytkownicy WHERE login='$username'";
-        $result = mysqli_query($conn, $query);
+        $query = "SELECT id FROM uzytkownicy WHERE login= ?";
+        $stmt=mysqli_prepare($conn,$query);
+        mysqli_stmt_bind_param($stmt,"s",$username);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
 
         $selected_option = isset($_POST['opcje']) ? $_POST['opcje'] : '';
         ?>
@@ -52,7 +55,7 @@ require_once 'db_connect.php';
         if ($result && mysqli_num_rows($result) > 0) {
             $row = mysqli_fetch_assoc($result);
             $id_uzytkownika = $row['id'];
-
+            $tableName = "koszyk".$id_uzytkownika;
             $query2 = "SELECT * FROM przedmioty WHERE 1";
             $result2 = mysqli_query($conn, $query2);
             $queryAlfa="SELECT * FROM przedmioty ORDER BY nazwa";
@@ -118,15 +121,23 @@ require_once 'db_connect.php';
         header('Location: index.html');
     }
 
-    $query3 = "SHOW TABLES LIKE 'koszyk".$id_uzytkownika."'";
-    $result3 = mysqli_query($conn, $query3);
+    $query3 = "SHOW TABLES LIKE 'koszyk?";
+    $stmt3 = mysqli_prepare($conn,$query3);
+    mysqli_stmt_bind_param($stmt3,"i",$id_uzytkownika);
+    mysqli_stmt_execute($stmt3);
+    $result3 = mysqli_stmt_get_result($stmt3);
     $tableName = "koszyk".$id_uzytkownika;
     if($result3 && mysqli_num_rows($result3)==0) {
-        $query4 = "CREATE TABLE ".$tableName." (id_przedmiotu INT, ilosc INT, FOREIGN KEY (id_przedmiotu) REFERENCES przedmioty(id_przedmiotu));";
-        mysqli_query($conn, $query4);
+        $query4 = "CREATE TABLE ? (id_przedmiotu INT, ilosc INT, FOREIGN KEY (id_przedmiotu) REFERENCES przedmioty(id_przedmiotu));";
+        $stmt4=mysqli_prepare($conn,$query4);
+        mysqli_stmt_bind_param($stmt4,"s",$tableName);
+        mysqli_stmt_execute($stmt4);
     }
-    $queryilosc = "SELECT * FROM koszyk".$id_uzytkownika." WHERE 1";
-    $resultilosc = mysqli_query($conn, $queryilosc);
+    $queryilosc = "SELECT * FROM ? WHERE 1";
+    $stmtilosc = mysqli_prepare($conn, $queryilosc);
+    mysqli_stmt_bind_param($stmtilosc,"i",$tableName);
+    mysqli_stmt_execute($stmtilosc);
+    $resultilosc = mysqli_stmt_get_result($stmtilosc);
     $suma = 0;
     for($i=0;$i<mysqli_num_rows($resultilosc);$i++) {
         $rowilosc = mysqli_fetch_assoc($resultilosc);

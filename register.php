@@ -15,13 +15,18 @@ $nazwisko = mysqli_real_escape_string($conn,$nazwisko);
 $email = mysqli_real_escape_string($conn,$email);
 $telefon = mysqli_real_escape_string($conn,$telefon);
 $wiek = mysqli_real_escape_string($conn,$wiek);
-$query = "SELECT * FROM uzytkownicy WHERE login='$username'";
-$query2 = "INSERT INTO uzytkownicy (`imie`, `nazwisko`, `email`, `telefon`, `wiek`, `login`, `haslo`) VALUES ('$imie','$nazwisko','$email','$telefon','$wiek','$username','$password')";
-$result = mysqli_query($conn, $query);
+$query = "SELECT * FROM uzytkownicy WHERE login= ?";
+$stmt=mysqli_prepare($conn,$query);
+mysqli_stmt_bind_param($stmt,"s",$username);
+mysqli_stmt_execute($stmt);
+$query2 = "INSERT INTO uzytkownicy (`imie`, `nazwisko`, `email`, `telefon`, `wiek`, `login`, `haslo`) VALUES (?,?,?,?,?,?,?)";
+$result = mysqli_stmt_get_result($stmt);
 if (mysqli_num_rows($result) > 0) {
     echo "Uzytkownik z taka nazwa juz istnieje <br>";
 } else {
-    $result2 = mysqli_query($conn, $query2);
+    $stmt2=mysqli_prepare($conn,$query2);
+    mysqli_stmt_bind_param($stmt2,"ssssiss",$imie,$nazwisko,$email,$telefon,$wiek,$username,$password);
+    mysqli_stmt_execute($stmt2);
     echo "Utworzono uzytkownika <br>";
     echo "<form action='index.html'>";
     echo "<input type='submit' value='Przejd do logowania'>";
