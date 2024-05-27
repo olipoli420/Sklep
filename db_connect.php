@@ -5,7 +5,7 @@ $password = "";
 $dbname = "polaczenie";
 
 // Tworzenie połączenia z bazą danych
-$conn = new mysqli($servername, $username, $password, $dbname);
+$conn = mysqli_connect($servername, $username, $password, $dbname);
 
 // Sprawdzenie czy połączenie z bazą danych się udało
 if ($conn->connect_error) {

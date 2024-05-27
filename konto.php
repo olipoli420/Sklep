@@ -3,8 +3,11 @@ session_start();
 require_once 'db_connect.php';
 $username = $_SESSION['username'];
 
-$query = "SELECT * FROM uzytkownicy WHERE login='$username'";
-$result = mysqli_query($conn, $query);
+$query = "SELECT * FROM uzytkownicy WHERE login= ?";
+$stmt=mysqli_prepare($conn,$query);
+mysqli_stmt_bind_param($stmt,"s",$username);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
 $row=mysqli_fetch_assoc($result);
 $username=$row['login'];
 $id=$row['id'];
@@ -20,14 +23,15 @@ $wiek=$row['wiek'];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Konto</title>
-    <link rel="stylesheet" href="styles.css">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
     <nav>
     <ul>
         <li><a href="#">Strona główna</a></li>
         <li><a href="welcome.php">Produkty</a></li>
         <li><a href="PokazKoszyk.php">Koszyk</a></li>
         <li><a href="konto.php">Konto</a></li>
+        <li><a href="opinie.php">Opinie</a></li>
         <li><a href="#">Kontakt</a></li>
     </ul>
 </nav>
@@ -58,19 +62,28 @@ $wiek=$row['wiek'];
             <!-- Lista rozwijana -->
             <div class="dropdown mt-3" id="dropdownList1" style="display: none;">
                 <?php
-                    $query1="SELECT * FROM zamowieniaklientow WHERE id_uzytkownika=".$id;
-                    $result1=mysqli_query($conn,$query1);
+                    $query1="SELECT * FROM zamowieniaklientow WHERE id_uzytkownika= ?";
+                    $stmt1=mysqli_prepare($conn,$query1);
+                    mysqli_stmt_bind_param($stmt1,"i",$id);
+                    mysqli_stmt_execute($stmt1);
+                    $result1= mysqli_stmt_get_result($stmt1);
                     while($row1=mysqli_fetch_assoc($result1))
                     {
                         print "Złozyłeś zamowienie o id".$row1['Id_zamowienia']."<br> Oto przedmioty zamowione: <br>";
-                        $query2="SELECT * FROM zamowioneprzedmioty WHERE Id_zamowienia=".$row1['Id_zamowienia'];
-                        $result2=mysqli_query($conn,$query2);
+                        $query2="SELECT * FROM zamowioneprzedmioty WHERE Id_zamowienia= ?";
+                        $stmt2= mysqli_prepare($conn,$query2);
+                        mysqli_stmt_bind_param($stmt2,"i",$row1['Id_zamowienia']);
+                        mysqli_stmt_execute($stmt2);
+                        $result2= mysqli_stmt_get_result($stmt2);
                         print "<table class='table table-striped table-bordered'>";
                         print "<tr><th>Nazwa</th><th>Cena</th><th>Ilosc</th></tr>";
                         while($row2=mysqli_fetch_assoc($result2))
                         {
-                            $query3="SELECT * FROM przedmioty WHERE id_przedmiotu=".$row2['id_przedmiotu'];
-                            $result3=mysqli_query($conn, $query3);
+                            $query3="SELECT * FROM przedmioty WHERE id_przedmiotu= ?";
+                            $stmt3=mysqli_prepare($conn,$query3);
+                            mysqli_stmt_bind_param($stmt3,"i",$row2['id_przedmiotu']);
+                            mysqli_stmt_execute($stmt3);
+                            $result3=mysqli_stmt_get_result($stmt3);
                             $row3=mysqli_fetch_assoc($result3);
                             print "<tr><td> ".$row3['nazwa']."</td> <td> ".$row3['cena']."</td> <td>".$row2['ilosc']."</td></tr><br>";
                         }
@@ -80,7 +93,7 @@ $wiek=$row['wiek'];
             </div>
         </div>
     </div>
-    <form action='logout.php' method='post'><input type='submit' class='btn btn-primary' value='Wyloguj'></form>
+    <form action='logaut.php' method='post'><input type='submit' class='btn btn-primary' value='Wyloguj'></form>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

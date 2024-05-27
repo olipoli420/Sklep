@@ -16,15 +16,19 @@
         <input type="text" name="Adres" placeholder="Adres" class="form-control" required><br>
         Kod pocztowy: <br>
         <input type="text" name="Kod_pocztowy" placeholder="Kod Pocztowy" class="form-control" required><br>
+        
+        <?php
+            // Uzupełnienie danych zmiennych
+            $id_uzytkownika = isset($_POST['id_uzytkownika']) ? $_POST['id_uzytkownika'] : '';
+            $tableName = isset($_POST['nazwa_tabeli']) ? $_POST['nazwa_tabeli'] : '';
+            // Wyświetlenie ukrytych pól
+            echo "<input type='hidden' name='nazwa_tabeli' value='" . $tableName . "'>";
+            echo "<input type='hidden' name='id_uzytkownika' value='" . $id_uzytkownika . "'>";
+        ?>
+
         <div class="container mt-5" style='display: flex'>
             <div class="div1" style='flex: 1;'>
                 <input type='submit' value='Akceptuj' class="btn btn-secondary">
-                <?php
-                    $id_uzytkownika = $_POST['id_uzytkownika'];
-                    $tableName = $_POST['nazwa_tabeli'];
-                    print "<input type='hidden' name='nazwa_tabeli' value='" .$tableName. "'><input type='hidden' name='id_uzytkownika' value='".$id_uzytkownika."'>";
-                ?>
-    </form>
             </div>
             <div class="div2" style='flex: 1;'>
                 <form action="PokazKoszyk.php">
@@ -32,5 +36,6 @@
                 </form>
             </div>
         </div>
+    </form>
 </body>
 </html>
