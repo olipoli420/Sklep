@@ -5,8 +5,8 @@
 <!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
-<link rel="stylesheet" href="styles.css">
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <header>
@@ -34,9 +34,8 @@
     $tableName="Koszyk".$row3['id'];
     $id_uzytkownika = $row3['id'];
     $id=$row3['id'];
-    $query="SELECT * FROM ?";
+    $query="SELECT * FROM $tableName";
     $stmt=mysqli_prepare($conn,$query);
-    mysqli_stmt_bind_param($stmt,"s",$tableName);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
 if(mysqli_num_rows($result)==0)

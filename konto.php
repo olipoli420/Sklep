@@ -23,8 +23,8 @@ $wiek=$row['wiek'];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Konto</title>
-    <link rel="stylesheet" href="styles.css">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
     <nav>
     <ul>
         <li><a href="#">Strona główna</a></li>
@@ -81,7 +81,7 @@ $wiek=$row['wiek'];
                         {
                             $query3="SELECT * FROM przedmioty WHERE id_przedmiotu= ?";
                             $stmt3=mysqli_prepare($conn,$query3);
-                            mysqli_stmt_bind_param($stmt3,"i",$row2['id_przedmiotu'])
+                            mysqli_stmt_bind_param($stmt3,"i",$row2['id_przedmiotu']);
                             mysqli_stmt_execute($stmt3);
                             $result3=mysqli_stmt_get_result($stmt3);
                             $row3=mysqli_fetch_assoc($result3);
@@ -93,7 +93,7 @@ $wiek=$row['wiek'];
             </div>
         </div>
     </div>
-    <form action='logout.php' method='post'><input type='submit' class='btn btn-primary' value='Wyloguj'></form>
+    <form action='logaut.php' method='post'><input type='submit' class='btn btn-primary' value='Wyloguj'></form>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

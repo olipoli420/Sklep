@@ -5,7 +5,7 @@ $id_przedmiotu=$_POST['id_przedmiotu'];
 $tableName=$_POST['nazwa_tabeli'];
 $query="UPDATE $tableName SET ilosc = ilosc - 1 where id_przedmiotu= ?";
 $stmt=mysqli_prepare($conn,$query);
-mysqli_stmt_bind_param($stmt,"i",$id_przedmiotu)
+mysqli_stmt_bind_param($stmt,"i",$id_przedmiotu);
 mysqli_stmt_execute($stmt);
 $query2="SELECT * FROM $tableName WHERE id_przedmiotu= ?";
 $stmt2=mysqli_prepare($conn,$query2);
