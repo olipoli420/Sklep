@@ -1,0 +1,140 @@
+/* Global Styles */
+body {
+    font-family: Arial, sans-serif;
+}
+
+/* Carousel Styles */
+.carousel-item img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Product Details Styles */
+.container h2 {
+    font-size: 36px;
+}
+
+.container h3 {
+    font-size: 24px;
+}
+
+.container p {
+    font-size: 18px;
+}
+
+.rating {
+    display: inline-block;
+}
+
+.rating input {
+    display: none;
+}
+
+.rating label {
+    cursor: pointer;
+    width: 30px;
+    font-size: 24px;
+    color: #FFD700;
+}
+
+.rating label:hover,
+.rating label:hover ~ label,
+.rating input:checked ~ label {
+    color: #FFD700;
+}
+
+.star-rating {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+}
+
+.star-rating input[type="radio"] {
+    display: none;
+}
+
+.star-rating label {
+    color: #bbb;
+    font-size: 25px;
+    cursor: pointer;
+}
+
+.star-rating input[type="radio"]:checked ~ label,
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+    color: #f2b600;
+}
+
+.form-container {
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
+
+.form-container label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-container input[type="text"],
+.form-container textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.form-container input[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.star-rating-display {
+    color: #f2b600;
+    font-size: 20px;
+    display: inline-block;
+    margin-bottom: 5px;
+}
+
+.review {
+    border-bottom: 1px solid #ccc;
+    padding: 10px 0;
+}
+
+.review h5 {
+    margin: 0;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.review p {
+    margin: 5px 0;
+}
+
+.review .text-muted {
+    font-size: 12px;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.reviews-section {
+    margin-bottom: 20px;
+}
+
+.options .btn {
+    display: inline-block;
+    width: 48%; /* Aby przyciski były mniej wąskie, możemy ustawić im szerokość */
+}
+.star-rating {
+    color: gold; /* Ustawienie koloru gwiazdek na złoty */
+}

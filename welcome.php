@@ -224,20 +224,26 @@ if ($stmtSuma) {
                                             </tr>
                                         </thead>
                                         <tbody>";
-                                while ($row2 = mysqli_fetch_assoc($result2)) {
-                                    echo "<tr>
-                                            <td>" . $row2['nazwa'] . "</td>
-                                            <td><img src='" . $row2['sciezka'] . "' alt='rysunek' class='img-fluid w-25'></td>
-                                            <td>" . $row2['cena'] . "</td>
-                                            <td>" . $row2['ilosc'] . "</td>
-                                            <td>
-                                                <form action='koszyk.php' method='post'>
-                                                    <input type='submit' value='Zamów' class='btn btn-secondary'>
-                                                    <input type='hidden' name='id_przedmiotu' value='" . $row2['id_przedmiotu'] . "'>
-                                                </form>
-                                            </td>
-                                          </tr>";
-                                }
+                                        while ($row2 = mysqli_fetch_assoc($result2)) {
+                                            // Sprawdź dostępność produktu
+                                            $dostepnosc = $row2['ilosc'] > 0 ? true : false;
+                                            // Ustaw klasę i aktywność przycisku w zależności od dostępności
+                                            $klasa_przycisku = $dostepnosc ? 'btn-secondary' : 'btn-danger disabled';
+                                            $aktywnosc_przycisku = $dostepnosc ? '' : 'disabled';
+                                            
+                                            echo "<tr>
+                                                    <td><a href='szczegoly.php?id_przedmiotu=" . $row2['id_przedmiotu'] . "'>" . $row2['nazwa'] . "</a></td>
+                                                    <td><a href='szczegoly.php?id_przedmiotu=" . $row2['id_przedmiotu'] . "'><img src='" . $row2['sciezka'] . "' alt='rysunek' class='img-fluid w-25'></a></td>
+                                                    <td>" . $row2['cena'] . "</td>
+                                                    <td>" . $row2['ilosc'] . "</td>
+                                                    <td>
+                                                        <form action='koszyk.php' method='post'>
+                                                            <input type='submit' value='Zamów' class='btn $klasa_przycisku' $aktywnosc_przycisku>
+                                                            <input type='hidden' name='id_przedmiotu' value='" . $row2['id_przedmiotu'] . "'>
+                                                        </form>
+                                                    </td>
+                                                  </tr>";
+                                        }
                                 echo "</tbody></table>";
                             } else {
                                 echo "<p>Brak przedmiotów w wybranej kategorii.</p>";

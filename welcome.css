@@ -179,4 +179,11 @@ th {
     text-stroke: 1px black; /* Dodaje kontur do tekstu */
     padding: 5px 10px; /* Dodatkowy padding dla tła */
 }
+table tr {
+    cursor: pointer;
+}
+
+table tr:hover {
+    background-color: #f1f1f1; /* Kolor tła po najechaniu */
+}
 
