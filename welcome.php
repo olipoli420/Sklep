@@ -5,8 +5,21 @@ require_once 'db_connect.php';
 if(!isset($_SESSION['last_category_Id'])) {
     $_SESSION['last_category_Id'] = NULL;
 }
+$suma = 0;
 
-$suma = 0; // Zainicjalizowanie zmiennej $suma na początku
+$id_uzytkownika = $_SESSION['id_klienta'];
+$tableName = "koszyk" . $id_uzytkownika;
+$_SESSION['tableName']=$tableName;
+$querySuma = "SELECT SUM(ilosc) AS suma FROM $tableName";
+$stmtSuma = mysqli_prepare($conn, $querySuma);
+if ($stmtSuma) {
+    mysqli_stmt_execute($stmtSuma);
+    $resultSuma = mysqli_stmt_get_result($stmtSuma);
+    if ($resultSuma) {
+        $sumaRow = mysqli_fetch_assoc($resultSuma);
+        $suma = $sumaRow['suma'];
+    }
+}
 
 ?>
 
@@ -17,186 +30,259 @@ $suma = 0; // Zainicjalizowanie zmiennej $suma na początku
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sklep internetowy</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="welcome.css">
 </head>
 <body>
     <header>
         <h1>Sklep internetowy</h1>
     </header>
-    <nav>
-        <ul>
-            <li><a href="welcome.php">Strona główna</a></li>
-            <li><a href="#">Produkty</a></li>
-            <li><a href="PokazKoszyk.php">Koszyk</a></li>
-            <li><a href="konto.php">Konto</a></li>
-            <li><a href="opinie.php">Opinie</a></li>
-            <li><a href="#">Kontakt</a></li>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="welcome.php">Sklep</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="welcome.php">Przedmioty</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="PokazKoszyk.php">Koszyk</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="opinie.php">Opinie</a>
+            </li>
         </ul>
-    </nav>
+        <ul class="navbar-nav navbar-right">
+            <li class="nav-item">
+                <div class="cart-icon dropdown" onmouseover="showCartDropdown()" onmouseout="hideCartDropdown()">
+                    <span class="cart-quantity"><?php echo $suma ? $suma : 0; ?></span>
+                    <div class="dropdown-menu" id="cartDropdown">
+                    <?php
+                        $query="SELECT * FROM $tableName";
+                        $stmt=mysqli_prepare($conn,$query);
+                        mysqli_stmt_execute($stmt);
+                        $result = mysqli_stmt_get_result($stmt);
+
+                        if(mysqli_num_rows($result) > 0) {
+                    ?>
+                        <table class='table table-striped'>
+                            <thead>
+                                <tr>
+                                    <th scope='col'>Nazwa</th>
+                                    <th scope='col'>Obraz</th>
+                                    <th scope='col'>Cena</th>
+                                    <th scope='col'>Ilość</th>
+                                    <th scope='col'>Akcja</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                    <?php
+                        while($row=mysqli_fetch_assoc($result))
+                        {
+                            $query2="SELECT * FROM przedmioty WHERE id_przedmiotu = ?";
+                            $stmt2=mysqli_prepare($conn,$query2);
+                            mysqli_stmt_bind_param($stmt2,"i",$row['id_przedmiotu']);
+                            mysqli_stmt_execute($stmt2);
+                            $result2 = mysqli_stmt_get_result($stmt2);
+                            $row2=mysqli_fetch_assoc($result2);
+                            $nazwa_tabeli = $tableName;
+                    ?>
+                            <tr>
+                                <td><?php echo $row2['nazwa']; ?></td>
+                                <td><img src="<?php echo $row2['sciezka']; ?>" alt="rysunek" class="img-fluid w-50"></td>
+                                <td><?php echo $row2['cena']; ?></td>
+                                <td><?php echo $row['ilosc']; ?></td>
+                                <td>
+                                    <form action="Usunzkoszyk.php" method="post">
+                                        <input type="submit" value="Usuń" class="btn btn-secondary">
+                                        <input type="hidden" name="id_przedmiotu" value="<?php echo $row2['id_przedmiotu']; ?>">
+                                    </form>
+                                </td>
+                            </tr>
+                    <?php
+                        }
+                    ?>
+                            </tbody>
+                        </table>
+                    <?php
+                        } else {
+                            echo "<p>Brak przedmiotów w koszyku.</p>";
+                        }
+                    ?>
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="konto.php"><span class="glyphicon glyphicon-user"></span> Konto</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="logaut.php"><span class="glyphicon glyphicon-log-out"></span> Wyloguj</a>
+            </li>
+        </ul>
+    </div>
+</nav>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-1">
-                Kategorie:
-                <nav id="sidebarMenu" class="collapse d-lg-block sidebar collapse bg-white" style="width: 150px;">
-                    <div class="position-sticky">
-                        <div class="list-group list-group-flush mx-3 mt-4">
-                            <?php
-                            $queryK = "SELECT * FROM kategorie";
-                            $stmtK = mysqli_prepare($conn, $queryK);
-                            if ($stmtK) {
-                                mysqli_stmt_execute($stmtK);
-                                $resultK = mysqli_stmt_get_result($stmtK);
-                                while ($rowK = mysqli_fetch_assoc($resultK)) {
-                                    $IdKategori = $rowK['id_kategorii'];
-                                    $NazwaKategori = $rowK['nazwa'];
-                                    $klasa = isset($_GET['category_id']) && $_GET['category_id'] == $IdKategori ? 'active' : '';
-                                    // Sprawdzamy, czy kategoria jest aktualnie wybrana, jeśli tak, to link nie przekazuje category_id
-                                    $link = $klasa ? "welcome.php" : "welcome.php?category_id=$IdKategori";
-                                    echo "<a href='$link' class='list-group-item list-group-item-action py-2 ripple category-link $klasa' aria-current='true'>$NazwaKategori</a>";
-                                }
-                                mysqli_free_result($resultK);
-                                mysqli_stmt_close($stmtK);
-                            } else {
-                                echo "<p>Błąd w przygotowaniu zapytania SQL: " . mysqli_error($conn) . "</p>";
+            <div class="col-md-2">
+                <h4>Kategorie:</h4>
+                <nav id="sidebarMenu" class="sidebar bg-white">
+                    <div class="list-group list-group-flush">
+                        <?php
+                        $queryK = "SELECT * FROM kategorie";
+                        $stmtK = mysqli_prepare($conn, $queryK);
+                        if ($stmtK) {
+                            mysqli_stmt_execute($stmtK);
+                            $resultK = mysqli_stmt_get_result($stmtK);
+                            while ($rowK = mysqli_fetch_assoc($resultK)) {
+                                $IdKategori = $rowK['id_kategorii'];
+                                $NazwaKategori = $rowK['nazwa'];
+                                $klasa = isset($_GET['category_id']) && $_GET['category_id'] == $IdKategori ? 'active' : '';
+                                $link = $klasa ? "welcome.php" : "welcome.php?category_id=$IdKategori";
+                                echo "<a href='$link' class='list-group-item list-group-item-action py-2 ripple category-link $klasa'>$NazwaKategori</a>";
                             }
-                            ?>
-                        </div>
+                            mysqli_free_result($resultK);
+                            mysqli_stmt_close($stmtK);
+                        } else {
+                            echo "<p>Błąd w przygotowaniu zapytania SQL: " . mysqli_error($conn) . "</p>";
+                        }
+                        ?>
                     </div>
                 </nav>
             </div>
-            <div class="col-md-11">
+            <div class="col-md-10">
                 <?php
-                $id_uzytkownika = null; // Domyślne ustawienie ID użytkownika
-                $suma = 0; // Domyślne ustawienie sumy
-                if (isset($_SESSION['username'])) { // Sprawdzenie, czy użytkownik jest zalogowany
-                    echo "<p>Witamy " . $_SESSION['username'] . "</p>"; // Wyświetlenie powitania
-
-                    $username = $_SESSION['username']; // Pobranie nazwy użytkownika
-
-                    $query = "SELECT id FROM uzytkownicy WHERE login = ?"; // Zapytanie SQL pobierające ID użytkownika
-                    $stmt = mysqli_prepare($conn, $query); // Przygotowanie zapytania SQL
-                    if ($stmt) 
-                    {
-                        mysqli_stmt_bind_param($stmt, "s", $username); // Przypisanie wartości do parametrów
-                        mysqli_stmt_execute($stmt); // Wykonanie zapytania
-                        $result = mysqli_stmt_get_result($stmt); // Pobranie wyników
-
-                        $selected_option = isset($_POST['opcje']) ? $_POST['opcje'] : ''; // Pobranie wybranej opcji sortowania
-                        $selected_category_id = isset($_GET['category_id']) ? $_GET['category_id'] : null; // Pobranie ID wybranej kategorii
-                        if ($result && mysqli_num_rows($result) > 0) // Sprawdzenie, czy są wyniki i czy liczba wyników jest większa od zera
-                        { 
-                            $row = mysqli_fetch_assoc($result); // Pobranie wiersza wyników
-                            $id_uzytkownika = $row['id']; // Przypisanie ID użytkownika
-                            $tableName = "koszyk" . $id_uzytkownika; // Nazwa tabeli koszyka dla użytkownika
-
-                            $querySuma = "SELECT SUM(ilosc) AS suma FROM $tableName"; // Zapytanie SQL pobierające sumę ilości produktów w koszyku
-                            $stmtSuma = mysqli_prepare($conn, $querySuma); // Przygotowanie zapytania SQL
-
-                            if ($stmtSuma) 
-                            {
-                                mysqli_stmt_execute($stmtSuma); // Wykonanie zapytania
-                                $resultSuma = mysqli_stmt_get_result($stmtSuma); // Pobranie wyników
-                                if ($resultSuma) 
-                                {
-                                    $sumaRow = mysqli_fetch_assoc($resultSuma); // Pobranie wiersza wyników
-                                    $suma = $sumaRow['suma']; // Przypisanie sumy
+                if (isset($_SESSION['username'])) {
+                    echo "<p>Witamy " . $_SESSION['username'] . "</p>";
+                    $username = $_SESSION['username'];
+                    $query = "SELECT id FROM uzytkownicy WHERE login = ?";
+                    $stmt = mysqli_prepare($conn, $query);
+                    if ($stmt) {
+                        mysqli_stmt_bind_param($stmt, "s", $username);
+                        mysqli_stmt_execute($stmt);
+                        $result = mysqli_stmt_get_result($stmt);
+                        $selected_option = isset($_POST['opcje']) ? $_POST['opcje'] : '';
+                        $selected_category_id = isset($_GET['category_id']) ? $_GET['category_id'] : null;
+                        if ($result && mysqli_num_rows($result) > 0) {
+                            $row = mysqli_fetch_assoc($result);
+                            $id_uzytkownika = $row['id'];
+                            $tableName = "koszyk" . $id_uzytkownika;
+                            $querySuma = "SELECT SUM(ilosc) AS suma FROM $tableName";
+                            $stmtSuma = mysqli_prepare($conn, $querySuma);
+                            if ($stmtSuma) {
+                                mysqli_stmt_execute($stmtSuma);
+                                $resultSuma = mysqli_stmt_get_result($stmtSuma);
+                                if ($resultSuma) {
+                                    $sumaRow = mysqli_fetch_assoc($resultSuma);
+                                    $suma = $sumaRow['suma'];
                                 }
                                 ?>
                                 <form action="welcome.php<?php echo isset($_GET['category_id']) ? '?category_id=' . $_GET['category_id'] : ''; ?>" method="POST">
-                                    <!-- Formularz sortowania -->
-                                    <input type="hidden" name="category_id" value="<?php echo isset($_GET['category_id']) ? $_GET['category_id'] : ''; ?>"> <!-- Ukryte pole z ID wybranej kategorii -->
+                                    <input type="hidden" name="category_id" value="<?php echo isset($_GET['category_id']) ? $_GET['category_id'] : ''; ?>">
                                     <label for="opcje">Sortuj:</label>
-                                    <select id="opcje" name="opcje" onchange="this.form.submit()"> <!-- Wysłanie formularza po zmianie opcji -->
-                                        <option value="Alfa" <?php if ($selected_option == 'Alfa') echo 'selected'; ?>>Alfabetycznie</option> <!-- Opcja sortowania alfabetycznego -->
-                                        <option value="CenaR" <?php if ($selected_option == 'CenaR') echo 'selected'; ?>>Cena Rosnąco</option> <!-- Opcja sortowania po cenie rosnąco -->
-                                        <option value="CenaM" <?php if ($selected_option == 'CenaM') echo 'selected'; ?>>Cena malejąco</option> <!-- Opcja sortowania po cenie malejąco -->
+                                    <select id="opcje" name="opcje" onchange="this.form.submit()">
+                                        <option value="Alfa" <?php if ($selected_option == 'Alfa') echo 'selected'; ?>>Alfabetycznie</option>
+                                        <option value="CenaR" <?php if ($selected_option == 'CenaR') echo 'selected'; ?>>Cena Rosnąco</option>
+                                        <option value="CenaM" <?php if ($selected_option == 'CenaM') echo 'selected'; ?>>Cena malejąco</option>
                                     </select>
                                 </form>
                                 <?php
-                            } // Zamknięcie warunku dla $stmtSuma
-                            // Modyfikacja zapytania SQL dla sortowania w danej kategorii
-                            $query = "SELECT * FROM przedmioty"; // Zapytanie SQL pobierające wszystkie przedmioty
-
+                            }
+                            $query = "SELECT * FROM przedmioty";
                             if (!empty($selected_category_id) && !isset($_GET['remove_category']) || (!empty($_POST['category_id']) && isset($_POST['category_id']))) {
-                                if(isset($_POST['category_id']))
-                                {
+                                if(isset($_POST['category_id'])) {
                                     $selected_category_id=$_POST['category_id'];
                                 }
-                                $query .= " WHERE id_kategorii=$selected_category_id"; // Dodanie warunku dla wybranej kategorii
+                                $query .= " WHERE id_kategorii=$selected_category_id";
                             }
-
                             if (!empty($selected_option)) {
                                 switch ($selected_option) {
                                     case "Alfa":
-                                        $query .= " ORDER BY nazwa"; // Sortowanie alfabetyczne
+                                        $query .= " ORDER BY nazwa";
                                         break;
                                     case "CenaR":
-                                        $query .= " ORDER BY cena ASC"; // Sortowanie po cenie rosnąco
+                                        $query .= " ORDER BY cena ASC";
                                         break;
                                     case "CenaM":
-                                        $query .= " ORDER BY cena DESC"; // Sortowanie po cenie malejąco
+                                        $query .= " ORDER BY cena DESC";
                                         break;
                                 }
                             }
-
-                            $result2 = mysqli_query($conn, $query); // Wykonanie zapytania SQL
-        
-                                if ($result2 && mysqli_num_rows($result2) > 0) // Sprawdzenie, czy są wyniki i czy liczba wyników jest większa od zera
-                                { 
-                                    echo "<table class='table table-striped'> <!-- Rozpoczęcie tabeli -->
-                                        <tr>
-                                            <th scope='col'>Nazwa</th>
-                                            <th scope='col'>Cena</th>
-                                            <th scope='col'>Ilość</th>
-                                            <th scope='col'>Akcja</th>
-                                        </tr>";
-        
-                                    while ($row2 = mysqli_fetch_assoc($result2)) // Pętla po wynikach zapytania
-                                    { 
-                                        echo "<tr> <!-- Rozpoczęcie wiersza -->
-                                                <th scope='row'>" . $row2['nazwa'] . "</th> <!-- Nazwa przedmiotu -->
-                                                <td border=0><img src='" . $row2['sciezka'] . "' alt='rysunek' class='img-fluid w-25'></td> <!-- Obraz przedmiotu -->
-                                                <td>" . $row2['cena'] . "</td> <!-- Cena przedmiotu -->
-                                                <td>" . $row2['ilosc'] . "</td> <!-- Ilość przedmiotu -->
-                                                <td>
-                                                    <form action='koszyk.php' method='post'> <!-- Formularz dodania do koszyka -->
-                                                        <input type='submit' value='Zamów' class='btn btn-secondary'> <!-- Przycisk zamówienia -->
-                                                        <input type='hidden' name='id_przedmiotu' value='" . $row2['id_przedmiotu'] . "'> <!-- Ukryte pole z ID przedmiotu -->
-                                                    </form>
-                                                </td>
-                                              </tr>"; // Koniec wiersza
-                                    }
-                                    echo "</table>"; // Koniec tabeli
-                                } else 
-                                {
-                                    echo "<p>Brak przedmiotów w wybranej kategorii.</p>"; // Komunikat o braku przedmiotów
+                            $result2 = mysqli_query($conn, $query);
+                            if ($result2 && mysqli_num_rows($result2) > 0) {
+                                echo "<table class='table table-striped'>
+                                        <thead>
+                                            <tr>
+                                                <th scope='col'>Nazwa</th>
+                                                <th scope='col'>Obraz</th>
+                                                <th scope='col'>Cena</th>
+                                                <th scope='col'>Ilość</th>
+                                                <th scope='col'>Akcja</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>";
+                                while ($row2 = mysqli_fetch_assoc($result2)) {
+                                    echo "<tr>
+                                            <td>" . $row2['nazwa'] . "</td>
+                                            <td><img src='" . $row2['sciezka'] . "' alt='rysunek' class='img-fluid w-25'></td>
+                                            <td>" . $row2['cena'] . "</td>
+                                            <td>" . $row2['ilosc'] . "</td>
+                                            <td>
+                                                <form action='koszyk.php' method='post'>
+                                                    <input type='submit' value='Zamów' class='btn btn-secondary'>
+                                                    <input type='hidden' name='id_przedmiotu' value='" . $row2['id_przedmiotu'] . "'>
+                                                </form>
+                                            </td>
+                                          </tr>";
                                 }
-                            } else 
-                            {
-                                echo "<p>Błąd podczas pobierania danych użytkownika.</p>"; // Komunikat o błędzie
+                                echo "</tbody></table>";
+                            } else {
+                                echo "<p>Brak przedmiotów w wybranej kategorii.</p>";
                             }
-                        } else 
-                        {
-                            header('Location: index.html'); // Przekierowanie na stronę logowania
+                        } else {
+                            echo "<p>Błąd podczas pobierania danych użytkownika.</p>";
                         }
+                    } else {
+                        header('Location: index.html');
                     }
-                    ?>
+                } else {
+                    header('Location: index.html');
+                }
+                ?>
+            </div>
+        </div>
+    </div>
+    <div class="container mt-5">
+        <div class="d-flex justify-content-between">
+            <form action='PokazKoszyk.php' method='post'>
+                <div class="cart-icon" onclick="this.parentNode.submit();">
+                    <span class="cart-quantity"><?php echo $suma ? $suma : 0; ?></span>
                 </div>
-            </div>
-        
+                <input type="hidden" name="category_id" value="<?php echo isset($_GET['category_id']) ? $_GET['category_id'] : ''; ?>">
+            </form>
+            <form action='welcome.php' method='get'>
+                <input type='hidden' name='remove_category' value='1'>
+                <button type='submit' class='btn btn-secondary'>Pokaż wszystkie przedmioty</button>
+            </form>
         </div>
-        <div class="container mt-5" style='display: flex'>
-            <div class="div1" style='flex: 1;'>
-                <form action='PokazKoszyk.php' method='post'>
-                    <div class="cart-icon" onclick="this.parentNode.submit();"><?php echo $suma; ?></div> <!-- Ikona koszyka -->
-                </form>
-            </div>
-            <div class="div2" style='flex: 1;'>
-                <form action='logaut.php' method='post'><input type='submit' class='btn btn-primary' value='Wyloguj'></form> <!-- Formularz wylogowania -->
-            </div>
-        </div>
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    </div>
+<script>
+    function showCartDropdown() {
+        var cartContent = document.getElementById("cartDropdown");
+        cartContent.style.display = "block";
+        var cartHeight = cartContent.scrollHeight + "px";
+        cartContent.style.height = cartHeight;
+    }
+
+    function hideCartDropdown() {
+        var cartContent = document.getElementById("cartDropdown");
+        cartContent.style.display = "none";
+        cartContent.style.height = "auto";
+    }
+</script>
+
 </body>
 </html>

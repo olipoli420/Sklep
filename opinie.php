@@ -8,9 +8,11 @@ require_once 'db_connect.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>Opinie</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <style>
         .star-rating {
             display: flex;
@@ -32,7 +34,7 @@ require_once 'db_connect.php';
         }
         .form-container {
             max-width: 500px;
-            margin: 0 auto;
+            margin: 20px auto;
             padding: 20px;
             border: 1px solid #ccc;
             border-radius: 10px;
@@ -60,6 +62,30 @@ require_once 'db_connect.php';
         .star-rating-display {
             color: #f2b600;
             font-size: 20px;
+            display: inline-block;
+            margin-bottom: 5px;
+        }
+        .review {
+            border-bottom: 1px solid #ccc;
+            padding: 10px 0;
+        }
+        .review h5 {
+            margin: 0;
+            display: inline-block;
+            margin-right: 10px;
+        }
+        .review p {
+            margin: 5px 0;
+        }
+        .review .text-muted {
+            font-size: 12px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .reviews-section {
+            margin-bottom: 20px;
         }
     </style>
 </head>
@@ -67,67 +93,70 @@ require_once 'db_connect.php';
 <header>
     <h1>Opinie</h1>
 </header>
-<nav>
-    <ul>
-        <li><a href="#">Strona główna</a></li>
-        <li><a href="welcome.php">Produkty</a></li>
-        <li><a href="PokazKoszyk.php">Koszyk</a></li>
-        <li><a href="konto.php">Konto</a></li>
-        <li><a href="opinie.php">Opinie</a></li>
-        <li><a href="#">Kontakt</a></li>
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="welcome.php">Sklep</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li class=""><a href="welcome.php">Przedmioty</a></li>
+      <li><a href="PokazKoszyk.php">Koszyk</a></li>
+      <li><a href="opinie.php">Opinie</a></li>
     </ul>
+    <ul class="nav navbar-nav navbar-right">
+      <li><a href="konto.php" class="active"><span class="glyphicon glyphicon-user"></span> Konto</a></li>
+      <li><a href="logaut.php"><span class="glyphicon glyphicon-log-out"></span> Wyloguj</a></li>
+    </ul>
+  </div>
 </nav>
 <div class="container">
-        <div class="row">
-            <div class="col-lg-8 mx-auto">
-                <h1 class="mt-4 mb-4">Opinie naszych klientów</h1>
-                <?php
-                $query="SELECT * FROM opinie";
-                $result=mysqli_query($conn,$query);
-                while($row=mysqli_fetch_assoc($result))
-                {
-                    $imie=htmlspecialchars($row['Imie']);
-                    $tekst=htmlspecialchars($row['tekst']);
-                    $stars=intval($row['gwiazdki']);
-                    print   "<div class='review'>";
-                    print   "<h5>".$row['Imie']."</h5>";
-                    print   "<div class='star-rating-display'>";
-                    for ($i = 1; $i <= 5; $i++) {
-                        if ($i <= $stars) {
-                            echo "<span class='star'>&#9733;</span>"; // Wypełniona gwiazdka
-                        } else {
-                            echo "<span class='star'>&#9734;</span>"; // Pusta gwiazdka
-                        }
-                    }
-                    print   "<p class='text-muted'>".$row['data_dodania']."</p>";
-                    print   "<p>".$row['tekst']."</p>";
-                    print   "</div>";
+    <div class="reviews-section">
+        <h1 class="mt-4 mb-4">Opinie naszych klientów</h1>
+        <?php
+        $query = "SELECT * FROM opinie";
+        $result = mysqli_query($conn, $query);
+        while ($row = mysqli_fetch_assoc($result)) {
+            $imie = htmlspecialchars($row['Imie']);
+            $tekst = htmlspecialchars($row['tekst']);
+            $stars = intval($row['gwiazdki']);
+            echo "<div class='review'>";
+            echo "<h5>" . $imie . "</h5>";
+            echo "<div class='star-rating-display'>";
+            for ($i = 1; $i <= 5; $i++) {
+                if ($i <= $stars) {
+                    echo "<span class='star'>&#9733;</span>"; // Wypełniona gwiazdka
+                } else {
+                    echo "<span class='star'>&#9734;</span>"; // Pusta gwiazdka
                 }
-                ?>
-                <div class="form-container">
-                    <h5>Dodaj swoją opinię</h5>
-                    <form action="dodajopinie.php" method="POST">
-                        <div class="form-group">
-                            <label for="name">Imię</label>
-                            <input type="text" class="form-control" id="name" name="imie" placeholder="Twoje imię" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="review">Opinia</label>
-                            <textarea class="form-control" id="review" rows="3" name="recenzja" placeholder="Twoja opinia" required></textarea>
-                        </div>
-                        <div class="star-rating">
-                            <input type="radio" id="5-stars" name="stars" value="5" required /><label for="5-stars" class="star">&#9733;</label>
-                            <input type="radio" id="4-stars" name="stars" value="4" /><label for="4-stars" class="star">&#9733;</label>
-                            <input type="radio" id="3-stars" name="stars" value="3" /><label for="3-stars" class="star">&#9733;</label>
-                            <input type="radio" id="2-stars" name="stars" value="2" /><label for="2-stars" class="star">&#9733;</label>
-                            <input type="radio" id="1-stars" name="stars" value="1" /><label for="1-stars" class="star">&#9733;</label>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Dodaj opinię</button>
-                    </form>
-                </div>
-
-            </div>
-        </div>
+            }
+            echo "</div>";
+            echo "<p class='text-muted'>" . $row['data_dodania'] . "</p>";
+            echo "<p>" . $tekst . "</p>";
+            echo "</div>";
+        }
+        ?>
     </div>
+    <div class="form-container">
+        <h5>Dodaj swoją opinię</h5>
+        <form action="dodajopinie.php" method="POST">
+            <div class="form-group">
+                <label for="name">Imię</label>
+                <input type="text" class="form-control" id="name" name="imie" placeholder="Twoje imię" required>
+            </div>
+            <div class="form-group">
+                <label for="review">Opinia</label>
+                <textarea class="form-control" id="review" rows="3" name="recenzja" placeholder="Twoja opinia" required></textarea>
+            </div>
+            <div class="star-rating">
+                <input type="radio" id="5-stars" name="stars" value="5" required /><label for="5-stars" class="star">&#9733;</label>
+                <input type="radio" id="4-stars" name="stars" value="4" /><label for="4-stars" class="star">&#9733;</label>
+                <input type="radio" id="3-stars" name="stars" value="3" /><label for="3-stars" class="star">&#9733;</label>
+                <input type="radio" id="2-stars" name="stars" value="2" /><label for="2-stars" class="star">&#9733;</label>
+                <input type="radio" id="1-stars" name="stars" value="1" /><label for="1-stars" class="star">&#9733;</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Dodaj opinię</button>
+        </form>
+    </div>
+</div>
 </body>
 </html>

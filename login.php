@@ -18,7 +18,7 @@ mysqli_stmt_bind_param($stmt, "s", $username);
 mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
 $row = mysqli_fetch_assoc($result);
-
+$_SESSION['id_klienta']=$row['id'];
 // Sprawdzenie czy istnieje użytkownik o podanych danych
 if ($row) {
     // Użytkownik istnieje, sprawdzenie hasła
