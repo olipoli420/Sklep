@@ -11,7 +11,7 @@ if (!empty($_POST['miejscowosc']) && !empty($_POST['ulica']) && !empty($_POST['a
     $kod_pocztowy = $_POST['kod_pocztowy'];
     
     // Pobranie id zalogowanego użytkownika
-    $id_uzytkownika = $_SESSION['id_uzytkownika'];
+    $id_uzytkownika = $_SESSION['id_klienta'];
     
     // Sprawdzenie czy adres już istnieje w bazie
     $querySprAdres = "SELECT * FROM adresy WHERE id_klienta=? AND Miejscowosc=? AND Ulica=? AND Adres=? AND Kod_pocztowy=?";
