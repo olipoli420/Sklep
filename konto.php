@@ -23,27 +23,41 @@ $wiek=$row['wiek'];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Konto</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">  
     <link rel="stylesheet" href="konto.css">
 </head>
 <body>
 <header>
     <h1>Konto</h1>
 </header>
-<nav class="navbar navbar-inverse">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="welcome.php">Sklep</a>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="welcome.php">Sklep</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="welcome.php">Przedmioty</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="PokazKoszyk.php">Koszyk</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="opinie.php">Opinie</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="konto.php"><i class="bi bi-person-circle"></i> konto</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="logaut.php"><i class="bi bi-box-arrow-left"></i> Wyloguj</a>
+                </li>
+            </ul>
         </div>
-        <ul class="nav navbar-nav">
-            <li><a href="welcome.php">Przedmioty</a></li>
-            <li><a href="PokazKoszyk.php">Koszyk</a></li>
-            <li><a href="opinie.php">Opinie</a></li>
-        </ul>
-        <ul class="nav navbar-nav navbar-right">
-            <li><a href="konto.php" class="active"><span class="glyphicon glyphicon-user"></span> konto</a></li>
-            <li><a href="logaut.php"><span class="glyphicon glyphicon-log-out"></span> Wyloguj</a></li>
-        </ul>
     </div>
 </nav>
 <div class="container">
@@ -121,10 +135,11 @@ $wiek=$row['wiek'];
         <div class="edit-user-details">
             <h3>Edytuj dane użytkownika</h3>
             <form action="edytuj_dane.php" method="post">
+                <input type="hidden" name="id" value="<?php echo $id ?>">
                 <label for="email">Nowy e-mail:</label>
-                <input type="email" id="email" name="email" value="<?php echo $email; ?>">
+                <input type="email" id="email" name="email" placeholder="<?php echo $email; ?>">
                 <label for="telefon">Nowy telefon:</label>
-                <input type="text" id="telefon" name="telefon" value="<?php echo $telefon; ?>">
+                <input type="text" id="telefon" name="telefon" placeholder="<?php echo $telefon; ?>">
                 <input type="submit" value="Zapisz zmiany">
             </form>
         </div>
@@ -188,9 +203,8 @@ $wiek=$row['wiek'];
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>

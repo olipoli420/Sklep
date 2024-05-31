@@ -88,6 +88,13 @@ th {
     background-color: #dc3545;
 }
 
+
+.table img{
+    max-width: 100px;
+    max-height: 100px;
+    width: auto;
+    height: auto;
+}
 /* Cart Icon Styles */
 .cart-icon {
     background-image: url('koszyk.jpg');
@@ -96,20 +103,13 @@ th {
     display: inline-block;
     text-align: center;
     line-height: 60px;
+    color: rgb(31, 63, 247);
     border: 1px solid #000;
     font-size: 24px;
-    color: red;
     cursor: pointer;
     border-radius: 50%;
     margin-left: 20px;
 }
-.table img{
-    max-width: 100px;
-    max-height: 100px;
-    width: auto;
-    height: auto;
-}
-
 /* Additional Styles for Welcome Page */
 .sidebar {
     margin-top: 20px;
@@ -173,7 +173,7 @@ th {
 .cart-icon a {
     pointer-events: none;
     font-size: 52px;
-    color: black;
+    color: rgb(109, 94, 241);
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Dodaje cień do tekstu */
     -webkit-text-stroke: 1px black; /* Dodaje kontur do tekstu (dla przeglądarek opartych na silniku WebKit) */
     text-stroke: 1px black; /* Dodaje kontur do tekstu */
@@ -186,4 +186,22 @@ table tr {
 table tr:hover {
     background-color: #f1f1f1; /* Kolor tła po najechaniu */
 }
+.hover-dropdown {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+  }
 
+  .hover-dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    width: 100%;
+  }
+
+  .hover-dropdown:hover .hover-dropdown-content {
+    display: block;
+  }

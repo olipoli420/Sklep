@@ -6,30 +6,43 @@
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" href="styles.css">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">  
 </head>
 <body>
 <header>
     <h1>Koszyk</h1>
 </header>
 
-<nav class="navbar navbar-inverse">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <a class="navbar-brand" href="welcome.php">Sklep</a>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="welcome.php">Sklep</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="welcome.php">Przedmioty</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="PokazKoszyk.php">Koszyk</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="opinie.php">Opinie</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="konto.php"><i class="bi bi-person-circle"></i> konto</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="logaut.php"><i class="bi bi-box-arrow-left"></i> Wyloguj</a>
+                </li>
+            </ul>
+        </div>
     </div>
-    <ul class="nav navbar-nav">
-      <li class=""><a href="welcome.php">Przedmioty</a></li>
-      <li><a href="PokazKoszyk.php">Koszyk</a></li>
-      <li><a href="opinie.php">Opinie</a></li>
-    </ul>
-    <ul class="nav navbar-nav navbar-right">
-      <li><a href="konto.php" class="active"><span class="glyphicon glyphicon-user"></span> konto</a></li>
-      <li><a href="logaut.php"><span class="glyphicon glyphicon-log-out"></span> Wyloguj</a></li>
-    </ul>
-  </div>
 </nav>
 <?php
     $username = mysqli_real_escape_string($conn, $_SESSION['username']);
@@ -65,18 +78,18 @@ print "<div class='container mt-5'>";
         $nazwa_tabeli = $tableName;
         print "<tr><th scope='row'>".$row2['nazwa']."</th><td><img src='".$row2['sciezka']."' alt='rysunek' class='img-fluid w-25'></td><td>".$row2['cena']."</td><td>".$row['ilosc']."</td>";
         print "<td><div class=\"Strzalki\">";
-        print "<form action=\"Dodajilosc.php\" method=\"POST\"><input type=\"submit\" value=\"▲\" class='btn btn-secondary'><input type='hidden' name='id_przedmiotu' value='" . $row['id_przedmiotu'] . "'><input type='hidden' name='nazwa_tabeli' value='" . $nazwa_tabeli . "'><input type='hidden' name='id_uzytkownika' value='" . $id_uzytkownika . "'></form>";
-        print "<form action=\"Odejmijilosc.php\" method=\"POST\"><input type=\"submit\" value=\"▼\" class='btn btn-secondary'><input type='hidden' name='id_przedmiotu' value='" . $row['id_przedmiotu'] . "'><input type='hidden' name='nazwa_tabeli' value='" . $nazwa_tabeli . "'><input type='hidden' name='id_uzytkownika' value='" . $id_uzytkownika . "'></form>";
-        print "</div></td><td>".$row2['ilosc']."</td><td><form action='Usunzkoszyk.php' method='post'><input type='submit' value='Usun' class='btn btn-secondary'><input type='hidden' name='id_przedmiotu' value='" . $row2['id_przedmiotu'] . "'></form></td></tr>";
+        print "<form action=\"Dodajilosc.php\" method=\"POST\"><input type=\"submit\" value=\"▲\" class='btn btn-outline-info'><input type='hidden' name='id_przedmiotu' value='" . $row['id_przedmiotu'] . "'><input type='hidden' name='nazwa_tabeli' value='" . $nazwa_tabeli . "'><input type='hidden' name='id_uzytkownika' value='" . $id_uzytkownika . "'></form>";
+        print "<form action=\"Odejmijilosc.php\" method=\"POST\"><input type=\"submit\" value=\"▼\" class='btn btn-outline-info'><input type='hidden' name='id_przedmiotu' value='" . $row['id_przedmiotu'] . "'><input type='hidden' name='nazwa_tabeli' value='" . $nazwa_tabeli . "'><input type='hidden' name='id_uzytkownika' value='" . $id_uzytkownika . "'></form>";
+        print "</div></td><td>".$row2['ilosc']."</td><td><form action='Usunzkoszyk.php' method='post'><input type='submit' value='Usun' class='btn btn-outline-danger'><input type='hidden' name='id_przedmiotu' value='" . $row2['id_przedmiotu'] . "'></form></td></tr>";
     }
     print "</table>";
     print "</div>";
     print "<div class='container mt-5' style='display: flex;'>";
     print "<div class='div1' style='flex: 1;'>";
-    Print "<form action='welcome.php'><input type=submit value='Cofnij do zakupow' class='btn btn-primary'></form>";
+    Print "<form action='welcome.php'><input type=submit value='Cofnij do zakupow' class='btn btn-outline-primary'></form>";
     print "</div>";
     print "<div class='div2' style='flex: 1; margin-left: auto;'>";
-    print "<form action=\"KlientZamowienia.php\" method=\"POST\"><input type=\"submit\" value='Zamów' class='btn btn-primary'> <input type='hidden' name='nazwa_tabeli' value='" .$tableName. "'><input type='hidden' name='id_uzytkownika' value='".$id."'></form>";
+    print "<form action=\"KlientZamowienia.php\" method=\"POST\"><input type=\"submit\" value='Zamów' class='btn btn-outline-success'> <input type='hidden' name='nazwa_tabeli' value='" .$tableName. "'><input type='hidden' name='id_uzytkownika' value='".$id."'></form>";
     print "</div>";
     print "</div>";
 }

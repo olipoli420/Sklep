@@ -39,14 +39,34 @@ $row=mysqli_fetch_assoc($result);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Szczegóły Zamówienia Nr: <?php echo $id_zamowienia; ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">  
     <link rel="stylesheet" href="admin.css">
 </head>
 <body>
     <header>
         <div class="container">
-            <h1 class="text-center mt-4">Szczegóły Zamówienia Nr: <?php echo $id_zamowienia; ?></h1>
+            <h1 class="text-center ">Szczegóły Zamówienia Nr: <?php echo $id_zamowienia; ?></h1>
         </div>
     </header>
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href=""></a>
+            <div class="d-flex">
+                <form class="me-2" action="admin.php">
+                    <button class="btn btn-outline-secondary" type="submit">
+                        Cofnij
+                        <i class="bi bi-backspace-fill"></i>
+                    </button>
+                </form>
+                <form action="logaut.php">
+                    <button class="btn btn-outline-danger" type="submit">
+                        Wyloguj
+                        <i class="bi bi-box-arrow-left align-middle"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </nav>
     <div class="container mt-4">
         <div class="row">
             <div class="col-md-4">

@@ -55,12 +55,24 @@ $resultMagazyn = mysqli_stmt_get_result($stmtMagazyn);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">  
     <link rel="stylesheet" href="admin.css">
 </head>
 <body>
     <header>
         <h1>Panel administratora</h1>
     </header>
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href=""></a>
+            <form class="d-flex" action="logaut.php">
+                <button class="btn btn-outline-danger" type="submit">
+                    Wyloguj
+                    <i class="bi bi-box-arrow-left align-middle"></i>
+                </button>
+            </form>
+        </div>
+    </nav>
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-8">

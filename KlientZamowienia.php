@@ -48,16 +48,16 @@ require_once 'db_connect.php';
 
         <div class="container mt-5" style='display: flex'>
             <div class="div1" style='flex: 1;'>
-                <input
                 <input type='submit' value='Akceptuj' class="btn btn-secondary">
             </div>
+    </form>
             <div class="div2" style='flex: 1;'>
                 <form action="PokazKoszyk.php">
                     <input class="btn btn-secondary" type="submit" value="Wroc do koszyka">
                 </form>
             </div>
         </div>
-    </form>
+
   <!-- Formularz dodawania nowego adresu -->
   <div class="container mt-5">
         <h4>Dodaj nowy adres:</h4>

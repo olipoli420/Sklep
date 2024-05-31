@@ -14,5 +14,10 @@
     $stmt=mysqli_prepare($conn,$query);
     mysqli_stmt_bind_param($stmt,"i",$id_przedmiotu);
     mysqli_stmt_execute($stmt);
-    header("Location: PokazKoszyk.php");
+    if(isset($_POST['welcome']))
+    {
+        header("Location: welcome.php");
+    }
+    else
+        header("Location: PokazKoszyk.php");
 ?>
