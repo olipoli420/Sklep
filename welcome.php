@@ -92,7 +92,11 @@ if ($stmtSuma) {
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
             <li class="nav-item">
                     <div class="cart-icon">
-                        <span class="cart-quantity"><?php echo $suma ? $suma : 0; ?></span>
+                        <span class="cart-quantity"> 
+                            <span class="position-absolute top-50 start-50 badge rounded-pill text-primary-emphasis  text-opacity-90 fs-1 translate-middle">
+                                <?php echo $suma ? $suma : 0; ?> 
+                            </span>
+                        </span>
                         <div class="cart-dropdown-content" id="cartDropdown">
                             <?php
                                 $query = "SELECT * FROM $tableName";
@@ -162,8 +166,10 @@ if ($stmtSuma) {
 
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-2">
-                <h4>Kategorie:</h4>
+            <div class="col-md-2 border-start border-end border-info">
+                <div class="h4 pb-2 mb-4 text-info border-bottom border-info">
+                    Kategorie:
+                </div>
                 <nav id="sidebarMenu" class="sidebar bg-white">
                     <div class="list-group list-group-flush">
                         <?php
@@ -318,7 +324,9 @@ if ($stmtSuma) {
         <div class="d-flex justify-content-between">
             <form action='PokazKoszyk.php' method='post'>
                 <div class="cart-icon" onclick="this.parentNode.submit();">
-                    <?php echo $suma ? $suma : 0; ?>
+                    <span class="position-absolute top-50 start-50 badge rounded-pill text-primary-emphasis  text-opacity-90 fs-1 translate-middle">
+                         <?php echo $suma ? $suma : 0; ?> 
+                    </span>
                 </div>
                 <input type="hidden" name="category_id" value="<?php echo isset($_GET['category_id']) ? $_GET['category_id'] : ''; ?>">
             </form>
