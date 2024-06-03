@@ -1,3 +1,13 @@
+<?php
+session_start();
+if (!isset($_SESSION['nieudane_proby'])) {
+    $_SESSION['nieudane_proby'] = 0;
+    $_SESSION['czas_blokady'] = 0;
+}
+if (time() < $_SESSION['czas_blokady']) {
+    header("Refresh: 1");
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -60,8 +70,9 @@
             <label for="password">Hasło:</label>
             <input type="password" id="password" name="password" placeholder="Hasło">
         </div>
-        <button type="submit">Zaloguj</button>
+        <button type="submit" <?php echo (time() < $_SESSION['czas_blokady']) ? 'disabled class="btn btn-danger"' : ''; ?>>Zaloguj</button>
     </form>
+    <?php if(time() < $_SESSION['czas_blokady']) print "<p>Poczekaj ".$_SESSION['czas_blokady']-time()." sekund</p>";?>
     <a href="register.html" class="register-link">Nie masz jeszcze konta? Zarejestruj się tutaj</a>
 </body>
 </html>

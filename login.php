@@ -3,7 +3,7 @@ session_start();
 
 // Połączenie z bazą danych
 require_once 'db_connect.php';
-
+$blokada = 60; // 60 seconds
 // Pobranie danych z formularza
 $username = $_POST['username'];
 $password = $_POST['password'];
@@ -28,14 +28,32 @@ if ($row) {
         if ($row['Klasa'] == "Admin") {
             header('Location: Admin.php');
         } else {
+            $_SESSION['nieudane_proby'] = 0;
+            $_SESSION['czas_blokady'] = 0;
+            $success = "Formularz wysłany poprawnie!";
             header('Location: welcome.php'); // Przekierowanie do strony powitalnej
         }
     } else {
         // Błędne hasło
-        echo "Błędne hasło. Spróbuj ponownie.";
+        $_SESSION['nieudane_proby']++;
+        $error = "Nieprawidłowe dane, spróbuj ponownie.";
+
+        if ($_SESSION['nieudane_proby'] >= 3) {
+            $_SESSION['czas_blokady'] = time() + $blokada;
+            $error = "Przycisk został zablokowany na minutę.";
+        }
+        header("Location: login1.php");
     }
 } else {
     // Brak użytkownika o podanym loginie
-    echo "Użytkownik nie istnieje. Spróbuj ponownie.";
+    $_SESSION['nieudane_proby']++;
+    $error = "Nieprawidłowe dane, spróbuj ponownie.";
+
+    if ($_SESSION['nieudane_proby'] >= 3) {
+        $_SESSION['czas_blokady'] = time() + $blokada;
+        $error = "Przycisk został zablokowany na minutę.";
+    }
+    header("Location: login1.php");
 }
+
 ?>
